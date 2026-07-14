@@ -8,12 +8,12 @@ import { SkeletonTable } from "../components/common/Loader";
 import { ErrorState } from "../components/common/Alert";
 
 async function fetchUsers(): Promise<User[]> {
-  const { data } = await axiosClient.get<User[]>("/admin/users");
+  const { data } = await axiosClient.get<User[]>("/api/admin/users");
   return data;
 }
 
 async function fetchStats() {
-  const { data } = await axiosClient.get("/admin/stats");
+  const { data } = await axiosClient.get("/api/admin/stats");
   return data;
 }
 
@@ -24,11 +24,11 @@ export default function AdminPanelPage() {
 
   const updateRole = useMutation(
     ({ id, role }: { id: string; role: string }) =>
-      axiosClient.put(`/admin/users/${id}/role`, { role }),
+      axiosClient.put(`/api/admin/users/${id}/role`, { role }),
     { onSuccess: () => queryClient.invalidateQueries("admin-users") }
   );
 
-  const deleteUser = useMutation((id: string) => axiosClient.delete(`/admin/users/${id}`), {
+  const deleteUser = useMutation((id: string) => axiosClient.delete(`/api/admin/users/${id}`), {
     onSuccess: () => queryClient.invalidateQueries("admin-users")
   });
 
