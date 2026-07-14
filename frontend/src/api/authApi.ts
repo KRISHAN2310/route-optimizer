@@ -14,16 +14,16 @@ export interface RegisterPayload {
 }
 
 export async function loginRequest(payload: LoginPayload): Promise<AuthResponse> {
-  const { data } = await axiosClient.post<AuthResponse>("/auth/login", payload);
+  const { data } = await axiosClient.post<AuthResponse>("/api/auth/login", payload);
   return data;
 }
 
 export async function registerRequest(payload: RegisterPayload): Promise<AuthResponse> {
-  const { data } = await axiosClient.post<AuthResponse>("/auth/register", payload);
+  const { data } = await axiosClient.post<AuthResponse>("/api/auth/register", payload);
   return data;
 }
 
 export async function fetchProfile(): Promise<User> {
-  const { data } = await axiosClient.get<User>("/auth/me");
+  const { data } = await axiosClient.get<User>("/api/auth/me");
   return data;
 }
