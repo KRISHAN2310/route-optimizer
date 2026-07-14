@@ -1,88 +1,368 @@
-# Smart Route Optimization System
+# 🚚 Smart Route Optimization System for Last-Mile Delivery
 
-Full-stack route optimization platform with real road routing (OSRM),
-a modern SaaS-style frontend (light/dark mode), and production-ready
-Docker Compose deployment.
+A production-ready full-stack logistics platform that optimizes last-mile delivery routes using real road-network routing, vehicle capacity constraints, fuel estimation, and interactive fleet management dashboards.
 
-## Stack
-- Frontend: React + TypeScript + Vite + Tailwind CSS + React Router + Axios + React Query + React Hook Form + Leaflet + Socket.io Client + Chart.js + react-icons
-- Backend: Node.js + Express + TypeScript + Prisma + PostgreSQL + Redis + JWT + Bcrypt + Socket.io + Multer
-- Routing: self-hosted **OSRM** (Open Source Routing Machine) — no Google Maps API anywhere in this stack
+The system enables logistics companies to efficiently manage deliveries, assign drivers, optimize routes, monitor fleets in real time, and analyze delivery performance through a modern web application.
 
-## Road Routing (OSRM)
-`backend/src/services/osrmService.ts` calls a self-hosted OSRM instance for:
-- `/table` — pairwise road distance/duration matrix, used by the nearest-neighbor optimizer
-- `/route` — real road geometry, total distance, total duration, and per-leg distance/duration for the final stop order
+---
 
-If OSRM is unreachable, `optimizationService.ts` automatically falls back to
-the original straight-line (Haversine) calculation so route creation never
-hard-fails — the map then draws a dashed straight line instead of the solid
-road path.
+# 🌐 Live Demo
 
-## Quick Start — Docker Compose (recommended)
+### Frontend
+https://route-optimizer-two-omega.vercel.app/
+
+### Backend API
+https://route-optimizer-backend-vw2n.onrender.com/
+
+### Health Check
+https://route-optimizer-backend-vw2n.onrender.com/health
+
+---
+
+# 📸 Application Preview
+
+
+
+## Login
+
+![Login](screenshots/login.png)
+
+## Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+## Route Planner
+
+![Planner](screenshots/planner.png)
+
+## Vehicle Management
+
+![Vehicle](screenshots/vehicle.png)
+
+## Driver Panel
+
+![Driver](screenshots/driver.png)
+
+## Analytics Dashboard
+
+![Analytics](screenshots/analytics.png)
+
+---
+
+# ✨ Features
+
+- Secure JWT Authentication
+- Role-Based Access Control (Admin, Dispatcher, Driver)
+- Multi-stop Route Optimization
+- Real Road Routing using OSRM
+- Vehicle Capacity Validation
+- Driver Assignment
+- Fleet Management Dashboard
+- CSV Delivery Upload
+- Fuel Consumption Estimation
+- ETA Prediction
+- Delivery Analytics
+- Live Route Tracking
+- Responsive UI
+- Dark / Light Theme
+- Dockerized Deployment
+- REST API Architecture
+
+---
+
+# 🏗 System Architecture
+
+(Add architecture diagram here)
+
+---
+
+# 🛠 Technology Stack
+
+## Frontend
+
+- React.js
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- React Query
+- React Hook Form
+- Axios
+- Leaflet
+- Chart.js
+- Socket.IO Client
+- React Icons
+
+---
+
+## Backend
+
+- Node.js
+- Express.js
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- Redis
+- JWT Authentication
+- Bcrypt
+- Multer
+- Socket.IO
+
+---
+
+## Routing Engine
+
+- Open Source Routing Machine (OSRM)
+
+No Google Maps API is used for route computation.
+
+---
+
+# 🚛 Route Optimization
+
+The application performs road-based route optimization using a self-hosted OSRM server.
+
+The backend communicates with OSRM through:
+
+- `/table` endpoint for road distance matrix generation
+- `/route` endpoint for optimized road geometry and travel information
+
+The optimized route includes
+
+- Road distance
+- Travel duration
+- ETA
+- Turn-by-turn road geometry
+
+If OSRM becomes unavailable, the backend automatically falls back to Haversine distance calculations, ensuring uninterrupted route generation.
+
+---
+
+# 📦 Vehicle Capacity Management
+
+Each vehicle maintains
+
+- Maximum Weight
+- Maximum Volume
+- Current Load
+- Remaining Capacity
+
+Before route generation, the backend validates whether the total package weight exceeds the available vehicle capacity.
+
+If capacity is exceeded, the request is rejected with an HTTP 422 response.
+
+Current load is automatically updated after route creation and released when deliveries are completed.
+
+---
+
+# 🧠 Route Optimization Algorithms
+
+The system implements multiple algorithms including
+
+- Nearest Neighbor
+- Priority-First Routing
+- Dijkstra Algorithm
+- A* Search Algorithm
+- ETA Calculation
+- Fuel Estimation
+- Vehicle Capacity Validation
+
+---
+
+# 📂 Project Structure
+
 ```
-# one-time: prepare OSRM map data — see osrm-data/README.md
+route-optimizer/
+
+├── frontend/
+├── backend/
+├── testing/
+│   ├── load-test.js
+│   ├── stress-test.js
+│   ├── result_1.png
+│   ├── result_2.png
+│   ├── result_3.png
+│   ├── result_4.png
+│   └── result_5.png
+│
+├── docker-compose.yml
+├── README.md
+└── .gitignore
+```
+
+---
+
+# 🚀 Docker Deployment
+
+## Start Complete Application
+
+```bash
 docker compose up -d --build
 ```
-This starts Postgres, Redis, OSRM, the backend (`:5000`) and frontend (`:4173`).
 
-## Quick Start — Manual / Local Dev
-### 1. Start Postgres, Redis & OSRM
-```
-docker compose up -d postgres redis osrm
-```
-(OSRM requires pre-processed map data first — see `osrm-data/README.md`.
-Without it, the app still works via the automatic Haversine fallback.)
+This starts
 
-### 2. Backend
-```
+- PostgreSQL
+- Redis
+- OSRM
+- Backend Server
+- Frontend Server
+
+---
+
+# 💻 Local Development
+
+## Backend
+
+```bash
 cd backend
+
 npm install
+
 npx prisma generate
+
 npx prisma migrate dev --name init
+
 npm run dev
 ```
-Runs on `http://localhost:5000`. Health check: `GET /health`.
 
-### 3. Frontend
+Backend runs at
+
 ```
+http://localhost:5000
+```
+
+Health Endpoint
+
+```
+GET /health
+```
+
+---
+
+## Frontend
+
+```bash
 cd frontend
+
 npm install
+
 npm run dev
 ```
-Runs on `http://localhost:5173`.
 
-### 4. Test the app — no dataset required, everything is created through the UI
-1. Go to `http://localhost:5173/register` and create an **Admin** account.
-2. Log in, go to **Vehicle Management** → add a vehicle (plate, type, capacity, efficiency, and optionally Max Weight / Max Volume / Current Load — Max Weight defaults to Capacity if left blank).
-3. Register a second account with role **Driver**, noting its email.
-4. Back in the admin session, go to **Driver Panel** → Add Driver → enter that **driver's email** (not an ID) → assign the vehicle. If the email doesn't match an existing account, you'll see "Driver not found."
-5. Go to **Route Planner** → pick the vehicle/algorithm → upload `sample-stops.csv` (included) via the CSV dropzone → **Generate Optimized Route**. The result panel shows total distance, travel time, and ETA, and the map draws the real road path from OSRM.
-6. Check **Dashboard** for total distance, total travel time, completed/pending deliveries, and next ETA.
-7. Log in as the driver to see **My Assignments**: current route, remaining stops, remaining distance, and estimated arrival time — all recalculated live as stops are marked visited.
+Frontend runs at
 
-## Modules
-Authentication, Dashboard, Route Planner, Vehicle Management, Driver Panel,
-Analytics, Admin Panel, Live Tracking, CSV Upload, Road-Based Route
-Optimization (OSRM), Fuel Estimation, Traffic Simulation (trafficFactor),
-Reports, Vehicle Capacity Enforcement.
+```
+http://localhost:5173
+```
 
-## Algorithms
-Nearest Neighbor & Priority-First (now driven by OSRM road distance, with
-Haversine fallback), Dijkstra, A*, ETA Calculation, Fuel Estimation,
-Priority Scheduling, Vehicle Capacity Validation (`backend/src/algorithms/`).
+---
 
-## Vehicle Capacity
-Each vehicle has `capacityKg` (legacy), plus `maxWeight`, `maxVolume`, and
-`currentLoad`. Available capacity = `maxWeight ?? capacityKg` minus
-`currentLoad`. Route creation is rejected (`422`) if the new stops' total
-demand would exceed it; `currentLoad` is incremented on route creation and
-released back on completion/cancellation. `maxVolume` is stored for display
-but not yet enforced (no per-stop volume data is currently collected).
+# 📋 How to Use
 
-## Default Roles
-ADMIN, DISPATCHER, DRIVER — register a user via `/register`, then create a
-matching Driver profile from the Driver Management screen (ADMIN/DISPATCHER)
-using that user's **email**.
+1. Register an Admin account
+2. Login into the Dashboard
+3. Add Vehicles
+4. Register Driver accounts
+5. Assign Drivers to Vehicles
+6. Upload delivery CSV
+7. Generate Optimized Route
+8. Monitor Route Progress
+9. View Analytics Dashboard
 
+---
 
+# 📊 Performance Testing
+
+The backend was tested using **Grafana k6**.
+
+## Load Testing
+
+- 20 Virtual Users
+- 50 Virtual Users
+- 100 Virtual Users
+- 200 Virtual Users
+
+## Stress Testing
+
+- Up to 1000 Concurrent Virtual Users
+
+Performance remained stable under increasing load while maintaining successful responses.
+
+---
+
+## Testing Results
+
+### Load Test (20 Users)
+
+![20 Users](testing/result_1.png)
+
+---
+
+### Load Test (50 Users)
+
+![50 Users](testing/result_2.png)
+
+---
+
+### Load Test (100 Users)
+
+![100 Users](testing/result_3.png)
+
+---
+
+### Load Test (200 Users)
+
+![200 Users](testing/result_4.png)
+
+---
+
+### Stress Test (1000 Users)
+
+![Stress Test](testing/result_5.png)
+
+---
+
+# 🔒 Security
+
+Implemented
+
+- JWT Authentication
+- Password Hashing using Bcrypt
+- Role-Based Authorization
+- Protected API Routes
+- Input Validation
+- HTTP Status Code Handling
+
+Security testing included
+
+- Invalid Login Attempts
+- SQL Injection Attempts
+- Invalid Payload Validation
+- Authentication Verification
+
+---
+
+# 📈 Future Improvements
+
+- AI-Based Route Optimization
+- Live Traffic Prediction
+- Carbon Emission Dashboard
+- Electric Vehicle Optimization
+- Predictive Delivery Analytics
+- Demand Forecasting
+- Mobile Application
+
+---
+
+# 👨‍💻 Author
+
+**Krishan Gopal**
+
+GitHub: https://github.com/KRISHAN2310
+
+---
+
+# 📄 License
+
+This project is developed for educational and internship purposes.
