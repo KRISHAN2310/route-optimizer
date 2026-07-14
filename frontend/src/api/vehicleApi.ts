@@ -13,17 +13,17 @@ export interface VehiclePayload {
 }
 
 export async function fetchVehicles(): Promise<Vehicle[]> {
-  const { data } = await axiosClient.get<Vehicle[]>("/vehicles");
+  const { data } = await axiosClient.get<Vehicle[]>("/api/vehicles");
   return data;
 }
 
 export async function fetchVehicle(id: string): Promise<Vehicle> {
-  const { data } = await axiosClient.get<Vehicle>(`/vehicles/${id}`);
+  const { data } = await axiosClient.get<Vehicle>(`/api/vehicles/${id}`);
   return data;
 }
 
 export async function createVehicleRequest(payload: VehiclePayload): Promise<Vehicle> {
-  const { data } = await axiosClient.post<Vehicle>("/vehicles", payload);
+  const { data } = await axiosClient.post<Vehicle>("/api/vehicles", payload);
   return data;
 }
 
@@ -31,10 +31,13 @@ export async function updateVehicleRequest(
   id: string,
   payload: Partial<VehiclePayload>
 ): Promise<Vehicle> {
-  const { data } = await axiosClient.put<Vehicle>(`/vehicles/${id}`, payload);
+  const { data } = await axiosClient.put<Vehicle>(
+    `/api/vehicles/${id}`,
+    payload
+  );
   return data;
 }
 
 export async function deleteVehicleRequest(id: string): Promise<void> {
-  await axiosClient.delete(`/vehicles/${id}`);
+  await axiosClient.delete(`/api/vehicles/${id}`);
 }

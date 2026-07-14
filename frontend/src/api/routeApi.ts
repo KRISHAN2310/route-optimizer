@@ -13,17 +13,17 @@ export interface CreateRoutePayload {
 }
 
 export async function fetchRoutes(): Promise<RouteRecord[]> {
-  const { data } = await axiosClient.get<RouteRecord[]>("/routes");
+  const { data } = await axiosClient.get<RouteRecord[]>("/api/routes");
   return data;
 }
 
 export async function fetchRoute(id: string): Promise<RouteRecord> {
-  const { data } = await axiosClient.get<RouteRecord>(`/routes/${id}`);
+  const { data } = await axiosClient.get<RouteRecord>(`/api/routes/${id}`);
   return data;
 }
 
 export async function createRouteRequest(payload: CreateRoutePayload): Promise<RouteRecord> {
-  const { data } = await axiosClient.post<RouteRecord>("/routes", payload);
+  const { data } = await axiosClient.post<RouteRecord>("/api/routes", payload);
   return data;
 }
 
@@ -31,15 +31,20 @@ export async function updateRouteStatusRequest(
   id: string,
   status: string
 ): Promise<RouteRecord> {
-  const { data } = await axiosClient.patch<RouteRecord>(`/routes/${id}/status`, { status });
+  const { data } = await axiosClient.patch<RouteRecord>(
+    `/api/routes/${id}/status`,
+    { status }
+  );
   return data;
 }
 
 export async function markStopVisitedRequest(routeId: string, stopId: string) {
-  const { data } = await axiosClient.patch(`/routes/${routeId}/stops/${stopId}/visit`);
+  const { data } = await axiosClient.patch(
+    `/api/routes/${routeId}/stops/${stopId}/visit`
+  );
   return data;
 }
 
 export async function deleteRouteRequest(id: string): Promise<void> {
-  await axiosClient.delete(`/routes/${id}`);
+  await axiosClient.delete(`/api/routes/${id}`);
 }
