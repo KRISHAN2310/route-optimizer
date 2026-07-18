@@ -72,7 +72,7 @@ https://route-optimizer-backend-vw2n.onrender.com/health
 
 # 🏗 System Architecture
 
-(Add architecture diagram here)
+![System Architecture](screenshots/system_architecture.png)
 
 ---
 
